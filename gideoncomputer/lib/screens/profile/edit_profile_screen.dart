@@ -58,14 +58,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             labelColor: Colors.black,
             tabs: [
               Tab(text: 'Identity'),
-              // Tab(text: 'Change Password'),
+              Tab(text: 'Change Password'),
             ],
           ),
         ),
         body: const TabBarView(
           children: [
             EditIdentityScreen(),
-            // ChangePasswordOnEditProfileScreen(),
+            ChangePasswordOnEditProfileScreen(),
           ],
         ),
       ),

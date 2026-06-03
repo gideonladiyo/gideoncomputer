@@ -160,25 +160,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text('Don\'t have an account?'),
                   TextButton(
-                    onPressed: () {
-                      String? encodeQueryParameters(Map<String, String> params) {
-                        return params.entries
-                            .map((e) =>
-                                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-                            .join('&');
-                      }
-        
-                      final Uri emailLaunchUri = Uri(
-                        scheme: 'mailto',
-                        path: 'online@edutiv.com',
-                        query: encodeQueryParameters(
-                            <String, String>{'subject': 'Request an Account'}),
-                      );
-        
-                      launchUrl(emailLaunchUri);
-                    },
+                    onPressed: () => Navigator.pushNamed(context, '/register'),
                     child: const Text(
-                      'Contact admin',
+                      'Register',
                       style: TextStyle(color: Color(0xFF126E64)),
                     ),
                   ),

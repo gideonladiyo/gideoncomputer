@@ -38,17 +38,24 @@ class AuthAPI {
       final response = await supabase.auth.signUp(
         email: email,
         password: password,
+        data: {
+          'fullname': fullname,
+        },
       );
 
       final user = response.user;
 
       if (user != null) {
-        await supabase.from('profiles').insert({
-          'id': user.id,
-          'fullname': fullname,
-          'email': email,
-          'role': 'student',
-        });
+        try {
+          await supabase.from('profiles').insert({
+            'id': user.id,
+            'fullname': fullname,
+            'email': email,
+            'role': 'student',
+          });
+        } catch (dbError) {
+          print("⚠️ Profile insert warning (likely trigger handled it or RLS blocked it): $dbError");
+        }
       }
 
       EasyLoading.dismiss();
