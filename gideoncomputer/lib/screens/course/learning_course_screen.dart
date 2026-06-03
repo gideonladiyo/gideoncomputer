@@ -1,5 +1,6 @@
 import 'package:gideoncomputer/api/course_api.dart';
 import 'package:gideoncomputer/model/course/enrolled_course_model.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:gideoncomputer/model/course/learning_progress_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -714,12 +715,37 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                 if (currentMaterial.description != null &&
                     currentMaterial.description!.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  Text(
-                    currentMaterial.description!,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                      height: 1.4,
+                  MarkdownBody(
+                    data: currentMaterial.description!,
+                    selectable: true,
+                    styleSheet: MarkdownStyleSheet(
+                      p: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                        height: 1.4,
+                        fontFamily: 'Poppins',
+                      ),
+                      strong: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[800],
+                        fontFamily: 'Poppins',
+                      ),
+                      em: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Poppins',
+                      ),
+                      listBullet: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13,
+                        fontFamily: 'Poppins',
+                      ),
+                      h3: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF126E64),
+                        fontFamily: 'Poppins',
+                        height: 1.6,
+                      ),
                     ),
                   ),
                 ],

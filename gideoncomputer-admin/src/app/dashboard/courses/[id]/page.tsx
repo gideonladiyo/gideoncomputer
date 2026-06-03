@@ -1,11 +1,12 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Course, Section, Material, Assessment } from '@/lib/types'
 import {
     Plus, Pencil, Trash2, ChevronLeft, ChevronDown, ChevronUp,
-    GripVertical, Video, FileText, HelpCircle, BookOpen, Check, X
+    GripVertical, Video, FileText, HelpCircle, BookOpen, Check, X,
+    Bold, Italic, List, Heading3, Eye, Edit2
 } from 'lucide-react'
 import { toast } from '@/components/Toast'
 
@@ -62,6 +63,56 @@ export default function CourseDetailPage() {
     const [examModal, setExamModal] = useState(false)
     const [examForm, setExamForm] = useState({ assessment_name: '', passing_score: 80 })
     const [examQuestions, setExamQuestions] = useState<QuestionForm[]>([emptyQuestion()])
+
+    // ── Markdown helpers
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const [descTab, setDescTab] = useState<'write' | 'preview'>('write')
+
+    const insertMarkdown = (syntax: string) => {
+        const textarea = textareaRef.current
+        if (!textarea) return
+
+        const start = textarea.selectionStart
+        const end = textarea.selectionEnd
+        const text = textarea.value
+        const selectedText = text.substring(start, end)
+        
+        let replacement = ''
+        if (syntax === 'bold') {
+            replacement = `**${selectedText || 'teks-tebal'}**`
+        } else if (syntax === 'italic') {
+            replacement = `*${selectedText || 'teks-miring'}*`
+        } else if (syntax === 'list') {
+            replacement = `\n- ${selectedText || 'item-daftar'}`
+        } else if (syntax === 'header') {
+            replacement = `### ${selectedText || 'Header'}`
+        }
+
+        const newValue = text.substring(0, start) + replacement + text.substring(end)
+        setMaterialForm({ ...materialForm, description: newValue })
+
+        setTimeout(() => {
+            textarea.focus()
+            const cursorOffset = replacement.length - (selectedText.length ? 0 : 2)
+            textarea.setSelectionRange(start + cursorOffset, start + cursorOffset)
+        }, 0)
+    }
+
+    const renderMarkdownPreview = (text: string) => {
+        if (!text) return <p className="text-gray-400 text-xs italic">Belum ada deskripsi.</p>;
+        let html = text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        html = html.replace(/^### (.*?)$/gm, '<h3 class="text-base font-bold my-2 text-teal-800">$1</h3>');
+        html = html.replace(/^- (.*?)$/gm, '<li class="ml-4 list-disc text-gray-700">$1</li>');
+        html = html.replace(/\n/g, '<br />');
+
+        return <div dangerouslySetInnerHTML={{ __html: html }} className="text-sm border border-gray-200 rounded-lg p-3 bg-gray-50 max-h-40 overflow-y-auto min-h-[80px]" />
+    }
 
     // ─── Fetch ──────────────────────────────────────────────────
     const fetchAll = async () => {
@@ -509,12 +560,55 @@ export default function CourseDetailPage() {
                                     className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600" />
                             </div>
                             <div>
-                                <label className="text-sm font-medium text-gray-700">Deskripsi/Keterangan Materi</label>
-                                <textarea value={materialForm.description}
-                                    onChange={e => setMaterialForm({ ...materialForm, description: e.target.value })}
-                                    placeholder="Tulis keterangan, rangkuman, atau info materi di sini..."
-                                    rows={3}
-                                    className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600" />
+                                <div className="flex items-center justify-between mt-1">
+                                    <label className="text-sm font-medium text-gray-700">Deskripsi/Keterangan Materi</label>
+                                    <div className="flex border border-gray-200 rounded-lg p-0.5 bg-gray-50 text-xs">
+                                        <button type="button"
+                                            onClick={() => setDescTab('write')}
+                                            className={`px-2 py-1 rounded-md transition ${descTab === 'write' ? 'bg-white text-gray-800 font-medium shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}>
+                                            <Edit2 size={12} className="inline mr-1" /> Tulis
+                                        </button>
+                                        <button type="button"
+                                            onClick={() => setDescTab('preview')}
+                                            className={`px-2 py-1 rounded-md transition ${descTab === 'preview' ? 'bg-white text-gray-800 font-medium shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}>
+                                            <Eye size={12} className="inline mr-1" /> Pratinjau
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {descTab === 'write' ? (
+                                    <div className="mt-1 border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-teal-600 focus-within:border-transparent">
+                                        {/* Formatting Toolbar */}
+                                        <div className="flex items-center gap-1 bg-gray-50 px-2 py-1.5 border-b border-gray-200 text-gray-600">
+                                            <button type="button" onClick={() => insertMarkdown('bold')} title="Tebal (Bold)" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                <Bold size={14} />
+                                            </button>
+                                            <button type="button" onClick={() => insertMarkdown('italic')} title="Miring (Italic)" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                <Italic size={14} />
+                                            </button>
+                                            <button type="button" onClick={() => insertMarkdown('header')} title="Header" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                <Heading3 size={14} />
+                                            </button>
+                                            <button type="button" onClick={() => insertMarkdown('list')} title="Daftar Poin" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                <List size={14} />
+                                            </button>
+                                            <span className="text-gray-300 text-xs ml-auto font-mono">Markdown</span>
+                                        </div>
+                                        
+                                        <textarea 
+                                            ref={textareaRef}
+                                            value={materialForm.description}
+                                            onChange={e => setMaterialForm({ ...materialForm, description: e.target.value })}
+                                            placeholder="Tulis keterangan, rangkuman, atau info materi di sini. Gunakan tombol formatting di atas untuk mempercantik teks..."
+                                            rows={4}
+                                            className="w-full px-3 py-2 text-sm focus:outline-none resize-y border-none" 
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="mt-1">
+                                        {renderMarkdownPreview(materialForm.description)}
+                                    </div>
+                                )}
                             </div>
                             {materialForm.material_type !== 'quiz' && (
                                 <div>
