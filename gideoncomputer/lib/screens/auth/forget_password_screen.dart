@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -14,27 +15,50 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool isLoading = false;
 
   Future<void> sendResetLink() async {
+    final email = emailController.text.trim();
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email wajib diisi')),
+      );
+      return;
+    }
+
     try {
       setState(() {
         isLoading = true;
       });
+      EasyLoading.show(status: 'Mengirim link reset...');
 
       await Supabase.instance.client.auth.resetPasswordForEmail(
-        emailController.text.trim(),
+        email,
         redirectTo: 'io.supabase.flutter://reset-callback/',
       );
 
+      EasyLoading.dismiss();
       if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Link reset password berhasil dikirim ke $email'),
+          backgroundColor: const Color(0xFF126E64),
+        ),
+      );
 
       Navigator.pushNamed(
         context,
         '/confirmPasswordReset',
-        arguments: emailController.text.trim(),
+        arguments: email,
       );
     } on AuthException catch (e) {
+      EasyLoading.dismiss();
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(e.message)));
+    } catch (e) {
+      EasyLoading.dismiss();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       setState(() {
         isLoading = false;
@@ -51,7 +75,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           child: CircleAvatar(
             backgroundColor: const Color.fromARGB(62, 158, 158, 158),
             child: IconButton(
-              onPressed: isLoading ? null : sendResetLink,
+              onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.chevron_left_outlined,
                   color: Color(0xFF126E64)),
             ),
@@ -61,7 +85,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         titleTextStyle: const TextStyle(color: Colors.black),
         centerTitle: true,
         title: const Text(
-          'Certificate',
+          'Forget Password',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),

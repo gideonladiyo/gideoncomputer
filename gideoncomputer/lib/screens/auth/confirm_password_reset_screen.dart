@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ConfirmPasswordResetScreen extends StatefulWidget {
   const ConfirmPasswordResetScreen({super.key});
@@ -55,8 +57,12 @@ class _ConfirmPasswordResetScreenState
                   child: SizedBox(
                     height: 45,
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('SEND RESET LINK'),
+                      onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/',
+                        (route) => false,
+                      ),
+                      child: const Text('BACK TO LOGIN'),
                     ),
                   ),
                 ),
@@ -67,7 +73,20 @@ class _ConfirmPasswordResetScreenState
               children: [
                 const Text('Don\'t receive the email?'),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (email != null && email.isNotEmpty) {
+                      try {
+                        EasyLoading.show(status: 'Mengirim ulang...');
+                        await Supabase.instance.client.auth.resetPasswordForEmail(
+                          email,
+                          redirectTo: 'io.supabase.flutter://reset-callback/',
+                        );
+                        EasyLoading.showSuccess('Link terkirim ulang!');
+                      } catch (e) {
+                        EasyLoading.showError('Gagal kirim ulang: $e');
+                      }
+                    }
+                  },
                   child: Text(
                     'Resend again',
                     style: TextStyle(color: Theme.of(context).primaryColor),
