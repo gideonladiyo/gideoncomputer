@@ -5,45 +5,49 @@ import type { NextRequest } from 'next/server'
 export async function proxy(req: NextRequest) {
     const res = NextResponse.next()
 
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-            cookies: {
-                getAll: () => req.cookies.getAll(),
-                setAll: (cookiesToSet) => {
-                    cookiesToSet.forEach(({ name, value, options }) => {
-                        res.cookies.set(name, value, options)
-                    })
+    try {
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll: () => req.cookies.getAll(),
+                    setAll: (cookiesToSet) => {
+                        cookiesToSet.forEach(({ name, value, options }) => {
+                            res.cookies.set(name, value, options)
+                        })
+                    },
                 },
-            },
+            }
+        )
+
+        const { data: { user } } = await supabase.auth.getUser()
+
+        const isLoginPage = req.nextUrl.pathname === '/login'
+        const isDashboard = req.nextUrl.pathname.startsWith('/dashboard')
+
+        if (!user && isDashboard) {
+            return NextResponse.redirect(new URL('/login', req.url))
         }
-    )
 
-    const { data: { user } } = await supabase.auth.getUser()
+        if (user && isDashboard) {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single()
 
-    const isLoginPage = req.nextUrl.pathname === '/login'
-    const isDashboard = req.nextUrl.pathname.startsWith('/dashboard')
-
-    if (!user && isDashboard) {
-        return NextResponse.redirect(new URL('/login', req.url))
-    }
-
-    if (user && isDashboard) {
-        const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single()
-
-        if (profile?.role !== 'admin') {
-            await supabase.auth.signOut()
-            return NextResponse.redirect(new URL('/login?error=unauthorized', req.url))
+            if (profile?.role !== 'admin') {
+                await supabase.auth.signOut()
+                return NextResponse.redirect(new URL('/login?error=unauthorized', req.url))
+            }
         }
-    }
 
-    if (user && isLoginPage) {
-        return NextResponse.redirect(new URL('/dashboard', req.url))
+        if (user && isLoginPage) {
+            return NextResponse.redirect(new URL('/dashboard', req.url))
+        }
+    } catch (e) {
+        console.error('⚠️ [Middleware Error]:', e)
     }
 
     return res
