@@ -70,7 +70,7 @@ class _SuccessCourseScreenState extends State<SuccessCourseScreen> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF126E64),
+                          backgroundColor: const Color(0xFFD32F2F),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -104,14 +104,18 @@ class _SuccessCourseScreenState extends State<SuccessCourseScreen> {
                             CustomData(
                               name: '${user.userData.fullname?.toUpperCase()}',
                               courseName: data.course?.courseName,
+                              certificateNumber: 'Op..${DateTime.now().year}-${DateTime.now().millisecondsSinceEpoch.toString().substring(9)}',
+                              issuedAt: DateTime.now().toIso8601String(),
+                              avatarUrl: user.userData.avatar,
+                              courseId: data.course?.id,
                             ),
                           );
                           CertificateAPI.openFile(certificateFile);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF126E64),
-                          side: const BorderSide(color: Color(0xFF126E64)),
+                          foregroundColor: const Color(0xFFD32F2F),
+                          side: const BorderSide(color: Color(0xFFD32F2F)),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),

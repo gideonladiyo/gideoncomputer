@@ -29,11 +29,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: IconButton(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.chevron_left_outlined,
-                    color: Color(0xFF126E64)),
+                    color: Color(0xFFD32F2F)),
               ),
             ),
           ),
-          iconTheme: const IconThemeData(color: Color(0xFF126E64)),
+          iconTheme: const IconThemeData(color: Color(0xFFD32F2F)),
           titleTextStyle: const TextStyle(color: Colors.black),
           centerTitle: true,
           title: const Text(
@@ -48,13 +48,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: IconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.more_vert_rounded,
-                      color: Color(0xFF126E64)),
+                      color: Color(0xFFD32F2F)),
                 ),
               ),
             ),
           ],
           bottom: const TabBar(
-            indicatorColor: Color(0xFF126E64),
+            indicatorColor: Color(0xFFD32F2F),
             labelColor: Colors.black,
             tabs: [
               Tab(text: 'Identity'),
@@ -213,7 +213,7 @@ class _EditIdentityScreenState extends State<EditIdentityScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Profil berhasil diperbarui'),
-                          backgroundColor: Color(0xFF126E64),
+                          backgroundColor: Color(0xFFD32F2F),
                         ),
                       );
                       Navigator.pop(context);
@@ -227,7 +227,7 @@ class _EditIdentityScreenState extends State<EditIdentityScreen> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF126E64),
+              backgroundColor: const Color(0xFFD32F2F),
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
             child: isSaving

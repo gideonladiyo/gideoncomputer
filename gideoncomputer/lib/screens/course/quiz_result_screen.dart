@@ -44,7 +44,7 @@ class QuizResultScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isPassed
-                      ? const Color(0xFFEAF6F5)
+                      ? const Color(0xFFFFEBEE)
                       : const Color(0xFFFFF0F0),
                 ),
                 child: Icon(
@@ -54,7 +54,7 @@ class QuizResultScreen extends StatelessWidget {
                             : Icons.check_circle_rounded)
                       : Icons.replay_rounded,
                   size: 56,
-                  color: isPassed ? const Color(0xFF126E64) : Colors.redAccent,
+                  color: isPassed ? const Color(0xFFD32F2F) : Colors.redAccent,
                 ),
               ),
               const SizedBox(height: 24),
@@ -63,7 +63,7 @@ class QuizResultScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: isPassed ? const Color(0xFF126E64) : Colors.redAccent,
+                  color: isPassed ? const Color(0xFFD32F2F) : Colors.redAccent,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -90,7 +90,7 @@ class QuizResultScreen extends StatelessWidget {
                         fontSize: 64,
                         fontWeight: FontWeight.bold,
                         color: isPassed
-                            ? const Color(0xFF126E64)
+                            ? const Color(0xFFD32F2F)
                             : Colors.redAccent,
                       ),
                     ),
@@ -106,7 +106,7 @@ class QuizResultScreen extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isPassed
-                            ? const Color(0xFF126E64).withOpacity(0.1)
+                            ? const Color(0xFFD32F2F).withOpacity(0.1)
                             : Colors.red.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -115,7 +115,7 @@ class QuizResultScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           color: isPassed
-                              ? const Color(0xFF126E64)
+                              ? const Color(0xFFD32F2F)
                               : Colors.redAccent,
                         ),
                       ),
@@ -140,7 +140,7 @@ class QuizResultScreen extends StatelessWidget {
                   child: ElevatedButton.icon(
                     onPressed: onNext,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF126E64),
+                      backgroundColor: const Color(0xFFD32F2F),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
                     icon: Icon(

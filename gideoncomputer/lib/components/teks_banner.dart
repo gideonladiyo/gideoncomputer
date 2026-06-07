@@ -11,7 +11,6 @@ class TeksBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var edutiv = Provider.of<CourseViewModel>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -37,7 +36,7 @@ class TeksBanner extends StatelessWidget {
               },
               child: const Text(
                 'See all',
-                style: TextStyle(color: Color(0xFF126E64)),
+                style: TextStyle(color: Color(0xFFD32F2F)),
               ),
             ),
           ],

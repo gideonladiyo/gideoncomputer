@@ -8,31 +8,31 @@ class ChoiceChips {
       label: 'All',
       isSelected: false,
       textColor: Colors.white,
-      selectedColor: const Color(0xFF126E64),
+      selectedColor: const Color(0xFFD32F2F),
     ),
     ChoiceChipData(
       label: 'Backend Engineer',
       isSelected: false,
       textColor: Colors.white,
-      selectedColor: const Color(0xFF126E64),
+      selectedColor: const Color(0xFFD32F2F),
     ),
     ChoiceChipData(
       label: 'Frontend Engineer',
       isSelected: false,
       textColor: Colors.white,
-      selectedColor: const Color(0xFF126E64),
+      selectedColor: const Color(0xFFD32F2F),
     ),
     ChoiceChipData(
       label: 'Mobile Engineer',
       isSelected: false,
       textColor: Colors.white,
-      selectedColor: const Color(0xFF126E64),
+      selectedColor: const Color(0xFFD32F2F),
     ),
     ChoiceChipData(
       label: 'UI/UX Designer',
       isSelected: false,
       textColor: Colors.white,
-      selectedColor: const Color(0xFF126E64),
+      selectedColor: const Color(0xFFD32F2F),
     ),
   ];
 }

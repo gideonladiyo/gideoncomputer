@@ -19,9 +19,9 @@ class CertificateDetailScreen extends StatelessWidget {
     final issuedAt = _formatDate(cert.issuedAt);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF126E64),
+      backgroundColor: const Color(0xFFD32F2F),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF126E64),
+        backgroundColor: const Color(0xFFD32F2F),
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -64,12 +64,12 @@ class CertificateDetailScreen extends StatelessWidget {
                           height: 80,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Color(0xFFEAF6F5),
+                            color: Color(0xFFFFEBEE),
                           ),
                           child: const Icon(
                             Icons.workspace_premium_rounded,
                             size: 48,
-                            color: Color(0xFF126E64),
+                            color: Color(0xFFD32F2F),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -90,7 +90,7 @@ class CertificateDetailScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF126E64),
+                            color: Color(0xFFD32F2F),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -154,14 +154,14 @@ class CertificateDetailScreen extends StatelessWidget {
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
                                           fontFamily: 'monospace',
-                                          color: Color(0xFF126E64),
+                                          color: Color(0xFFD32F2F),
                                         ),
                                       ),
                                       const SizedBox(width: 4),
                                       const Icon(
                                         Icons.copy_rounded,
                                         size: 12,
-                                        color: Color(0xFF126E64),
+                                        color: Color(0xFFD32F2F),
                                       ),
                                     ],
                                   ),
@@ -208,13 +208,17 @@ class CertificateDetailScreen extends StatelessWidget {
                         name:
                             profile.userData.fullname?.toUpperCase() ?? 'USER',
                         courseName: courseName,
+                        certificateNumber: certNumber,
+                        issuedAt: cert.issuedAt,
+                        avatarUrl: profile.userData.avatar,
+                        courseId: cert.courseId,
                       ),
                     );
                     CertificateAPI.openFile(certificateFile);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF126E64),
+                    foregroundColor: const Color(0xFFD32F2F),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

@@ -31,6 +31,15 @@ class ChoiceChipRow extends StatelessWidget {
                     categories[index],
                   ),
                   selected: false,
+                  showCheckmark: false,
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(
+                      color: Color(0xFFFFEBEE),
+                      width: 1.5,
+                    ),
+                  ),
                 );
               },
             ),

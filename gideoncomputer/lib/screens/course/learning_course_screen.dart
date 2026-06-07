@@ -142,6 +142,20 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
     }
   }
 
+  Future<void> _openSlide() async {
+    final url = _getCurrentUrl();
+    if (url.isEmpty) {
+      EasyLoading.showError('URL Slide/PDF tidak tersedia');
+      return;
+    }
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      EasyLoading.showError('Tidak dapat membuka Slide/PDF');
+    }
+  }
+
   Future<void> _markAsComplete() async {
     if (_isCurrentCompleted || _isMarkingComplete) return;
     setState(() => _isMarkingComplete = true);
@@ -300,7 +314,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(
                   Icons.chevron_left_outlined,
-                  color: Color(0xFF126E64),
+                  color: Color(0xFFD32F2F),
                 ),
               ),
             ),
@@ -360,7 +374,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(
                 Icons.chevron_left_outlined,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
               ),
             ),
           ),
@@ -381,7 +395,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                 builder: (context) {
                   return IconButton(
                     onPressed: () => Scaffold.of(context).openEndDrawer(),
-                    icon: const Icon(Icons.menu, color: Color(0xFF126E64)),
+                    icon: const Icon(Icons.menu, color: Color(0xFFD32F2F)),
                   );
                 },
               ),
@@ -420,12 +434,12 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
               height: 100,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFEAF6F5),
+                color: Color(0xFFFFEBEE),
               ),
               child: const Icon(
                 Icons.emoji_events_rounded,
                 size: 56,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
               ),
             ),
             const SizedBox(height: 24),
@@ -457,7 +471,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF126E64),
+                  backgroundColor: const Color(0xFFD32F2F),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -502,12 +516,12 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
               height: 100,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFEAF6F5),
+                color: Color(0xFFFFEBEE),
               ),
               child: const Icon(
                 Icons.assignment_rounded,
                 size: 56,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
               ),
             ),
             const SizedBox(height: 24),
@@ -542,7 +556,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                   ).then((_) => _refreshReports());
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF126E64),
+                  backgroundColor: const Color(0xFFD32F2F),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -563,8 +577,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
             OutlinedButton(
               onPressed: nextVideo,
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF126E64),
-                side: const BorderSide(color: Color(0xFF126E64)),
+                foregroundColor: const Color(0xFFD32F2F),
+                side: const BorderSide(color: Color(0xFFD32F2F)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -579,6 +593,55 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
 
   // ─── Video Content ───────────────────────────────────────────
 
+  Widget _buildSlidePlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.orange.shade800, Colors.orange.shade500],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.picture_as_pdf_rounded,
+                color: Colors.orange.shade800,
+                size: 32,
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Buka Slide / PDF Materi',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Ketuk untuk membaca dokumen',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildVideoContent(
     BuildContext context,
     currentMaterial,
@@ -589,75 +652,82 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
         ? 'https://img.youtube.com/vi/$videoId/hqdefault.jpg'
         : null;
 
+    final isSlide = currentMaterial.materialType == 'slide' ||
+        currentMaterial.materialType == 'pdf';
+
     return Column(
       children: [
         GestureDetector(
-          onTap: _openYoutube,
+          onTap: isSlide ? _openSlide : _openYoutube,
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: Stack(
               fit: StackFit.expand,
               children: [
-                if (thumbnailUrl != null)
-                  Image.network(
-                    thumbnailUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _thumbnailPlaceholder(),
-                  )
-                else
-                  _thumbnailPlaceholder(),
-                Container(color: Colors.black.withOpacity(0.25)),
-                Center(
-                  child: Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.4),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 38,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.65),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.open_in_new, color: Colors.white, size: 13),
-                        SizedBox(width: 4),
-                        Text(
-                          'Tonton di YouTube',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
+                if (isSlide)
+                  _buildSlidePlaceholder()
+                else ...[
+                  if (thumbnailUrl != null)
+                    Image.network(
+                      thumbnailUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _thumbnailPlaceholder(),
+                    )
+                  else
+                    _thumbnailPlaceholder(),
+                  Container(color: Colors.black.withOpacity(0.25)),
+                  Center(
+                    child: Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.4),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.play_arrow_rounded,
+                        color: Colors.white,
+                        size: 38,
+                      ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    bottom: 10,
+                    right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.65),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.open_in_new, color: Colors.white, size: 13),
+                          SizedBox(width: 4),
+                          Text(
+                            'Tonton di YouTube',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -688,7 +758,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                           vertical: 3,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF126E64),
+                          color: const Color(0xFFD32F2F),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Row(
@@ -742,7 +812,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       h3: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF126E64),
+                        color: const Color(0xFFD32F2F),
                         fontFamily: 'Poppins',
                         height: 1.6,
                       ),
@@ -757,7 +827,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isCompleted
                           ? Colors.grey[300]
-                          : const Color(0xFF126E64),
+                          : const Color(0xFFD32F2F),
                       foregroundColor: isCompleted
                           ? Colors.grey[600]
                           : Colors.white,
@@ -793,8 +863,8 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       child: OutlinedButton(
                         onPressed: prevVideo,
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: const Color(0xFF126E64),
-                          side: const BorderSide(color: Color(0xFF126E64)),
+                          foregroundColor: const Color(0xFFD32F2F),
+                          side: const BorderSide(color: Color(0xFFD32F2F)),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -811,7 +881,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       child: ElevatedButton(
                         onPressed: nextVideo,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF126E64),
+                          backgroundColor: const Color(0xFFD32F2F),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
@@ -856,7 +926,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF126E64),
+                  color: Color(0xFFD32F2F),
                 ),
               ),
             ],
@@ -869,7 +939,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
               minHeight: 8,
               backgroundColor: Colors.grey[200],
               valueColor: AlwaysStoppedAnimation<Color>(
-                _progressValue >= 1.0 ? Colors.green : const Color(0xFF126E64),
+                _progressValue >= 1.0 ? Colors.green : const Color(0xFFD32F2F),
               ),
             ),
           ),
@@ -920,7 +990,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF126E64),
+                          color: Color(0xFFD32F2F),
                         ),
                       ),
                     ],
@@ -935,7 +1005,7 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                       valueColor: AlwaysStoppedAnimation<Color>(
                         _progressValue >= 1.0
                             ? Colors.green
-                            : const Color(0xFF126E64),
+                            : const Color(0xFFD32F2F),
                       ),
                     ),
                   ),
@@ -1015,28 +1085,29 @@ class _LearningCourseScreenState extends State<LearningCourseScreen> {
                               });
                             },
                             tileColor: isActive
-                                ? const Color(0xFFD0EDE9)
+                                ? const Color(0xFFFFEBEE)
                                 : Colors.grey[200],
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(5),
                               ),
                             ),
-                            leading: material.materialType == 'slide'
+                            leading: (material.materialType == 'slide' ||
+                                    material.materialType == 'pdf')
                                 ? const Icon(Icons.slideshow_rounded)
                                 : material.materialType == 'quiz'
                                 ? const Icon(Icons.history_edu_rounded)
                                 : Icon(
                                     Icons.play_circle_filled_rounded,
                                     color: isActive
-                                        ? const Color(0xFF126E64)
+                                        ? const Color(0xFFD32F2F)
                                         : null,
                                   ),
                             title: Text(material.materialName ?? ''),
                             trailing: isDone
                                 ? const Icon(
                                     Icons.check_circle,
-                                    color: Color(0xFF126E64),
+                                    color: Color(0xFFD32F2F),
                                     size: 18,
                                   )
                                 : null,

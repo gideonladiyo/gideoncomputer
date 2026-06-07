@@ -35,7 +35,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(
                 Icons.chevron_left_outlined,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
               ),
             ),
           ),
@@ -134,12 +134,12 @@ class _CertificateCard extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: const Color(0xFFEAF6F5),
+                color: const Color(0xFFFFEBEE),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
                 Icons.workspace_premium_rounded,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
                 size: 32,
               ),
             ),

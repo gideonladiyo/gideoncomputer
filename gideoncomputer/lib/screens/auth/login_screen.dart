@@ -97,19 +97,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, '/forgetPassword'),
-                    child: const Text(
-                      'Forget password?',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     TextButton(
+              //       onPressed: () =>
+              //           Navigator.pushNamed(context, '/forgetPassword'),
+              //       child: const Text(
+              //         'Forget password?',
+              //         style: TextStyle(color: Colors.black),
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -163,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () => Navigator.pushNamed(context, '/register'),
                     child: const Text(
                       'Register',
-                      style: TextStyle(color: Color(0xFF126E64)),
+                      style: TextStyle(color: Color(0xFFD32F2F)),
                     ),
                   ),
                 ],

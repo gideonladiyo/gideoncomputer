@@ -152,16 +152,72 @@ export default function QuestionsPage() {
     const [showForm, setShowForm] = useState(false)
     const [editTarget, setEditTarget] = useState<QuestionWithOptions | null>(null)
 
-    // ── Step 1: Load courses ──────────────────────────────────
+    // ── Step 1: Load courses and parse parameters ──────────────
     useEffect(() => {
-        const fetchCourses = async () => {
+        const fetchCoursesAndParams = async () => {
             const { data } = await supabase
                 .from('courses')
                 .select('*')
                 .order('course_name')
-            setCourses((data as Course[]) ?? [])
+            const allCourses = (data as Course[]) ?? []
+            setCourses(allCourses)
+
+            // Read params from window.location.search
+            const params = new URLSearchParams(window.location.search)
+            const courseIdParam = params.get('courseId')
+            const sourceTypeParam = params.get('sourceType')
+            const sourceIdParam = params.get('sourceId')
+            const sourceNameParam = params.get('sourceName')
+
+            if (courseIdParam) {
+                const selected = allCourses.find(c => c.id === courseIdParam)
+                if (selected) {
+                    setSelectedCourse(selected)
+
+                    // Fetch quiz assessments (linked via section → course)
+                    const { data: qData } = await supabase
+                        .from('assessments')
+                        .select('*, sections(section_name, course_id)')
+                        .eq('assessment_type', 'quiz')
+                        .eq('sections.course_id', selected.id)
+
+                    // Fetch exam assessments (linked directly to course)
+                    const { data: eData } = await supabase
+                        .from('assessments')
+                        .select('*')
+                        .eq('assessment_type', 'exam')
+                        .eq('course_id', selected.id)
+
+                    const filteredQuizzes = ((qData as AssessmentWithSection[]) ?? []).filter(
+                        (q) => q.sections?.course_id === selected.id
+                    )
+                    setQuizzes(filteredQuizzes)
+                    setExams((eData as AssessmentWithSection[]) ?? [])
+
+                    if (sourceTypeParam && sourceIdParam) {
+                        setSelectedSource({
+                            type: sourceTypeParam as 'quiz' | 'exam',
+                            id: sourceIdParam,
+                            name: sourceNameParam ?? (sourceTypeParam === 'quiz' ? 'Quiz' : 'Final Exam')
+                        })
+                        setLoadingQ(true)
+                        setStep('questions')
+
+                        const { data: qList } = await supabase
+                            .from('questions')
+                            .select('*, question_options(*)')
+                            .eq('assessment_id', sourceIdParam)
+                            .order('created_at')
+
+                        setQuestions((qList as QuestionWithOptions[]) ?? [])
+                        setLoadingQ(false)
+                    } else {
+                        setStep('source')
+                    }
+                }
+            }
         }
-        fetchCourses()
+        fetchCoursesAndParams()
     }, [])
 
     const selectCourse = async (course: Course) => {

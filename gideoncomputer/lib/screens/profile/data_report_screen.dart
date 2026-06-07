@@ -20,11 +20,11 @@ class DataReportScreen extends StatelessWidget {
             child: IconButton(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.chevron_left_outlined,
-                  color: Color(0xFF126E64)),
+                  color: Color(0xFFD32F2F)),
             ),
           ),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF126E64)),
+        iconTheme: const IconThemeData(color: Color(0xFFD32F2F)),
         titleTextStyle: const TextStyle(color: Colors.black),
         centerTitle: true,
         title: const Text(
@@ -38,7 +38,7 @@ class DataReportScreen extends StatelessWidget {
               backgroundColor: const Color.fromARGB(62, 158, 158, 158),
               child: IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.info_rounded, color: Color(0xFF126E64)),
+                icon: const Icon(Icons.info_rounded, color: Color(0xFFD32F2F)),
               ),
             ),
           ),

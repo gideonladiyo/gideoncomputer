@@ -23,6 +23,14 @@ class CourseViewModel extends ChangeNotifier {
   late CourseModel _courseData;
   CourseModel get courseData => _courseData;
 
+  String _selectedCategory = 'All';
+  String get selectedCategory => _selectedCategory;
+
+  void setSelectedCategory(String category, {bool notify = true}) {
+    _selectedCategory = category;
+    if (notify) notifyListeners();
+  }
+
   Future<List<CategoryModel>> getAllCategory() async {
     print('🟡 [CourseViewModel.getAllCategory] START');
     isLoadingCategory = true;
@@ -54,7 +62,15 @@ class CourseViewModel extends ChangeNotifier {
       // API sudah memfilter deleted_at IS NULL, tapi kita double-check
       // di sini sebagai safety net — pastikan tidak ada soft-deleted yang lolos.
       _allCourse = courseData.where((c) => !c.isDeleted).toList();
-      _filteredCourse = _allCourse;
+      
+      if (_selectedCategory == 'All' || _selectedCategory.isEmpty) {
+        _filteredCourse = _allCourse;
+      } else {
+        _filteredCourse = _allCourse
+            .where((e) => e.category?.categoryName == _selectedCategory)
+            .toList();
+      }
+      
       print(
         '🟢 [CourseViewModel.getAllCourse] ${_allCourse.length} courses loaded, notifying listeners',
       );
@@ -105,6 +121,7 @@ class CourseViewModel extends ChangeNotifier {
     print(
       '🟡 [CourseViewModel.filterCourseByCategory] query=$query, _allCourse.length=${_allCourse.length}',
     );
+    _selectedCategory = query;
     if (query == 'All' || query.isEmpty) {
       _filteredCourse = _allCourse;
     } else {
@@ -126,6 +143,7 @@ class CourseViewModel extends ChangeNotifier {
     _allCourse = [];
     _filteredCourse = [];
     _allReview = [];
+    _selectedCategory = 'All';
     notifyListeners();
   }
 }

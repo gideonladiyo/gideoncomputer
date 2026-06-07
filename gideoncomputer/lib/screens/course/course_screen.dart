@@ -19,6 +19,7 @@ class _CourseScreenState extends State<CourseScreen> {
   void initState() {
     super.initState();
     final vm = Provider.of<CourseViewModel>(context, listen: false);
+    _selectedCategory = vm.selectedCategory;
     vm.getAllCourse();
     vm.getAllCategory();
   }
@@ -44,7 +45,7 @@ class _CourseScreenState extends State<CourseScreen> {
         iconTheme: const IconThemeData(color: Colors.black),
         titleTextStyle: const TextStyle(color: Colors.black),
         centerTitle: true,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: const Text(
           'Course Learning',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -160,17 +161,26 @@ class _CourseScreenState extends State<CourseScreen> {
   }
 
   Widget _buildChip(CourseViewModel vm, String label) {
-    final isSelected = _selectedCategory == label;
+    final isSelected = vm.selectedCategory == label;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: ChoiceChip(
         label: Text(label),
         labelStyle: TextStyle(
           color: isSelected ? Colors.white : Colors.black87,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
         selected: isSelected,
-        selectedColor: const Color(0xFF126E64),
-        backgroundColor: Colors.grey[200],
+        selectedColor: const Color(0xFFD32F2F),
+        backgroundColor: Colors.white,
+        showCheckmark: false,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: isSelected ? const Color(0xFFD32F2F) : const Color(0xFFFFEBEE),
+            width: 1.5,
+          ),
+        ),
         onSelected: (_) {
           setState(() {
             _selectedCategory = label;

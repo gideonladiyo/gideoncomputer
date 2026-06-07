@@ -41,10 +41,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Gideon Computer',
         theme: ThemeData(
-          primaryColor: const Color(0xFF126E64),
+          primaryColor: const Color(0xFFD32F2F),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF126E64),
+              backgroundColor: const Color(0xFFD32F2F),
               foregroundColor: Colors.white,
               textStyle: const TextStyle(
                 fontSize: 16,
@@ -54,8 +54,8 @@ class MyApp extends StatelessWidget {
           ),
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(0xFF126E64),
-              side: const BorderSide(color: Color(0xFF126E64)),
+              foregroundColor: const Color(0xFFD32F2F),
+              side: const BorderSide(color: Color(0xFFD32F2F)),
               textStyle: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           iconTheme: const IconThemeData(color: Colors.black),
           fontFamily: 'Poppins',
           progressIndicatorTheme: const ProgressIndicatorThemeData(
-            color: Color(0xFF126E64),
+            color: Color(0xFFD32F2F),
           ),
         ),
         builder: EasyLoading.init(),

@@ -54,7 +54,7 @@ class _QuizScreenState extends State<QuizScreen> {
               onPressed: () => Navigator.pop(context),
               icon: const Icon(
                 Icons.chevron_left_outlined,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
               ),
             ),
           ),
@@ -109,7 +109,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF126E64),
+                            color: Color(0xFFD32F2F),
                           ),
                         ),
                       ],
@@ -122,7 +122,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         minHeight: 6,
                         backgroundColor: Colors.grey[200],
                         valueColor: const AlwaysStoppedAnimation(
-                          Color(0xFF126E64),
+                          Color(0xFFD32F2F),
                         ),
                       ),
                     ),
@@ -141,7 +141,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEAF6F5),
+                          color: const Color(0xFFFFEBEE),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -168,12 +168,12 @@ class _QuizScreenState extends State<QuizScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? const Color(0xFF126E64)
+                                  ? const Color(0xFFD32F2F)
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: isSelected
-                                    ? const Color(0xFF126E64)
+                                    ? const Color(0xFFD32F2F)
                                     : Colors.grey[300]!,
                               ),
                               boxShadow: [
@@ -225,8 +225,8 @@ class _QuizScreenState extends State<QuizScreen> {
                                 ? () => setState(() => _currentIndex--)
                                 : null,
                             style: OutlinedButton.styleFrom(
-                              foregroundColor: const Color(0xFF126E64),
-                              side: const BorderSide(color: Color(0xFF126E64)),
+                              foregroundColor: const Color(0xFFD32F2F),
+                              side: const BorderSide(color: Color(0xFFD32F2F)),
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -245,7 +245,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                   onPressed: () =>
                                       setState(() => _currentIndex++),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF126E64),
+                                    backgroundColor: const Color(0xFFD32F2F),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 14,
@@ -266,7 +266,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                       ? () => _submit(vm)
                                       : null,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF126E64),
+                                    backgroundColor: const Color(0xFFD32F2F),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 14,

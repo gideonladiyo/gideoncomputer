@@ -40,7 +40,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Link reset password berhasil dikirim ke $email'),
-          backgroundColor: const Color(0xFF126E64),
+          backgroundColor: const Color(0xFFD32F2F),
         ),
       );
 
@@ -77,11 +77,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             child: IconButton(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.chevron_left_outlined,
-                  color: Color(0xFF126E64)),
+                  color: Color(0xFFD32F2F)),
             ),
           ),
         ),
-        iconTheme: const IconThemeData(color: Color(0xFF126E64)),
+        iconTheme: const IconThemeData(color: Color(0xFFD32F2F)),
         titleTextStyle: const TextStyle(color: Colors.black),
         centerTitle: true,
         title: const Text(

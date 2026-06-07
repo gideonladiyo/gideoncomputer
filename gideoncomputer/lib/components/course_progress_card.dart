@@ -57,29 +57,6 @@ class CourseProgressCard extends StatelessWidget {
                       },
                     ),
                   ),
-                  Positioned(
-                    left: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.white,
-                      ),
-                      width: 36,
-                      height: 18,
-                      child: FittedBox(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Icon(Icons.star,
-                                color: Colors.amber, size: 16),
-                            Text('$rating'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -118,7 +95,7 @@ class CourseProgressCard extends StatelessWidget {
                         trailing: Text('$teksProgressPersen %'),
                         animation: true,
                         backgroundColor: Colors.grey,
-                        progressColor: const Color(0xFF126E64),
+                        progressColor: const Color(0xFFD32F2F),
                       ),
                       const SizedBox(width: 1),
                       // Text('$progress %')

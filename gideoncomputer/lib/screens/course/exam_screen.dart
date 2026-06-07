@@ -49,7 +49,7 @@ class _ExamScreenState extends State<ExamScreen> {
               onPressed: () => Navigator.pop(context),
               icon: const Icon(
                 Icons.chevron_left_outlined,
-                color: Color(0xFF126E64),
+                color: Color(0xFFD32F2F),
               ),
             ),
           ),
@@ -79,7 +79,7 @@ class _ExamScreenState extends State<ExamScreen> {
                     const Icon(
                       Icons.emoji_events_rounded,
                       size: 80,
-                      color: Color(0xFF126E64),
+                      color: Color(0xFFD32F2F),
                     ),
                     const SizedBox(height: 16),
                     const Text(
@@ -98,7 +98,7 @@ class _ExamScreenState extends State<ExamScreen> {
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF126E64),
+                        backgroundColor: const Color(0xFFD32F2F),
                       ),
                       child: const Text('Kembali'),
                     ),
@@ -145,7 +145,7 @@ class _ExamScreenState extends State<ExamScreen> {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF126E64),
+                            color: Color(0xFFD32F2F),
                           ),
                         ),
                       ],
@@ -158,7 +158,7 @@ class _ExamScreenState extends State<ExamScreen> {
                         minHeight: 6,
                         backgroundColor: Colors.grey[200],
                         valueColor: const AlwaysStoppedAnimation(
-                          Color(0xFF126E64),
+                          Color(0xFFD32F2F),
                         ),
                       ),
                     ),
@@ -176,7 +176,7 @@ class _ExamScreenState extends State<ExamScreen> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEAF6F5),
+                          color: const Color(0xFFFFEBEE),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -201,12 +201,12 @@ class _ExamScreenState extends State<ExamScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? const Color(0xFF126E64)
+                                  ? const Color(0xFFD32F2F)
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: isSelected
-                                    ? const Color(0xFF126E64)
+                                    ? const Color(0xFFD32F2F)
                                     : Colors.grey[300]!,
                               ),
                             ),
@@ -260,7 +260,7 @@ class _ExamScreenState extends State<ExamScreen> {
                                   onPressed: () =>
                                       setState(() => _currentIndex++),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF126E64),
+                                    backgroundColor: const Color(0xFFD32F2F),
                                   ),
                                   child: const Text('Selanjutnya'),
                                 )
@@ -269,7 +269,7 @@ class _ExamScreenState extends State<ExamScreen> {
                                       ? () => _submit(vm)
                                       : null,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF126E64),
+                                    backgroundColor: const Color(0xFFD32F2F),
                                   ),
                                   child: vm.isSubmitting
                                       ? const SizedBox(

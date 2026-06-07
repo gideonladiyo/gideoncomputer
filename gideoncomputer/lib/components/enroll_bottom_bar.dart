@@ -33,8 +33,8 @@ class EnrollBottomBar extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () => _contactAdmin(context),
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF126E64),
-                side: const BorderSide(color: Color(0xFF126E64)),
+                foregroundColor: const Color(0xFFD32F2F),
+                side: const BorderSide(color: Color(0xFFD32F2F)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -54,7 +54,7 @@ class EnrollBottomBar extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: () => _showCodeDialog(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF126E64),
+                backgroundColor: const Color(0xFFD32F2F),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -109,7 +109,7 @@ class EnrollBottomBar extends StatelessWidget {
               ),
               title: const Row(
                 children: [
-                  Icon(Icons.vpn_key_rounded, color: Color(0xFF126E64)),
+                  Icon(Icons.vpn_key_rounded, color: Color(0xFFD32F2F)),
                   SizedBox(width: 8),
                   Text('Masukkan Kode', style: TextStyle(fontSize: 18)),
                 ],
@@ -143,13 +143,13 @@ class EnrollBottomBar extends StatelessWidget {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: const BorderSide(
-                          color: Color(0xFF126E64),
+                          color: Color(0xFFD32F2F),
                           width: 2,
                         ),
                       ),
                       prefixIcon: const Icon(
                         Icons.confirmation_number_outlined,
-                        color: Color(0xFF126E64),
+                        color: Color(0xFFD32F2F),
                       ),
                     ),
                   ),
@@ -193,7 +193,7 @@ class EnrollBottomBar extends StatelessWidget {
                           }
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF126E64),
+                    backgroundColor: const Color(0xFFD32F2F),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -231,7 +231,7 @@ class EnrollBottomBar extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Berhasil! Kamu sekarang bisa mengakses course ini.'),
-          backgroundColor: Color(0xFF126E64),
+          backgroundColor: Color(0xFFD32F2F),
         ),
       );
       Navigator.pop(context); // kembali dari detail screen

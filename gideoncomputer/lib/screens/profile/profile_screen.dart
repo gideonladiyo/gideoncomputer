@@ -71,21 +71,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       '/myCourse',
                       arguments: user.userData,
                     ),
-                    tileColor: Colors.grey[200],
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    tileColor: Colors.white,
+                    iconColor: const Color(0xFFD32F2F),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      side: const BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
                     ),
-                    title: const Text('My Course'),
+                    title: const Text(
+                      'My Course',
+                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black87),
+                    ),
                     trailing: const Icon(Icons.chevron_right_outlined),
                   ),
                   const SizedBox(height: 16),
                   ListTile(
                     onTap: () => Navigator.pushNamed(context, '/certificate'),
-                    tileColor: Colors.grey[200],
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    tileColor: Colors.white,
+                    iconColor: const Color(0xFFD32F2F),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      side: const BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
                     ),
-                    title: const Text('Certificate'),
+                    title: const Text(
+                      'Certificate',
+                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black87),
+                    ),
                     trailing: const Icon(Icons.chevron_right_outlined),
                   ),
                   // const SizedBox(height: 16),
@@ -142,11 +152,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                       launchUrl(emailLaunchUri);
                     },
-                    tileColor: Colors.grey[200],
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    tileColor: Colors.white,
+                    iconColor: const Color(0xFFD32F2F),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      side: const BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
                     ),
-                    title: const Text('Email Support'),
+                    title: const Text(
+                      'Email Support',
+                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black87),
+                    ),
                     trailing: const Icon(Icons.chevron_right_outlined),
                   ),
                   const SizedBox(height: 16),
@@ -175,12 +190,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       }
                     },
-                    tileColor: Colors.grey[200],
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    tileColor: Colors.white,
+                    iconColor: const Color(0xFFD32F2F),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
+                      side: const BorderSide(color: Color(0xFFFFEBEE), width: 1.5),
                     ),
                     leading: const Icon(Icons.logout_outlined),
-                    title: const Text('Logout'),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xFFD32F2F)),
+                    ),
                   ),
                 ],
               ),
@@ -338,7 +358,7 @@ class _CourseProgressCard extends StatelessWidget {
                       minHeight: 6,
                       backgroundColor: Colors.grey[200],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        _isDone ? Colors.green : const Color(0xFF126E64),
+                        _isDone ? Colors.green : const Color(0xFFD32F2F),
                       ),
                     ),
                   ),
@@ -357,7 +377,7 @@ class _CourseProgressCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: _isDone
                               ? Colors.green
-                              : const Color(0xFF126E64),
+                              : const Color(0xFFD32F2F),
                         ),
                       ),
                     ],

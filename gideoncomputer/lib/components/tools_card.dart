@@ -63,7 +63,7 @@ class ToolsCard extends StatelessWidget {
                 icon: const Icon(Icons.open_in_new, size: 16),
                 label: const Text('Download'),
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF126E64),
+                  foregroundColor: const Color(0xFFD32F2F),
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                 ),
               ),

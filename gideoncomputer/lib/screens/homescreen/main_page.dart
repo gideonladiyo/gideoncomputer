@@ -12,11 +12,17 @@ class MainPage extends StatefulWidget {
   MainPage({super.key, this.id, this.index});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainPage> createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   int currentIndex = 0;
+
+  void setTab(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
   List<Widget> get screens => [
     const HomeScreen(),
     const CourseScreen(),

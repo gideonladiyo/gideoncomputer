@@ -100,7 +100,7 @@ class _DetailCourseScreenState extends State<DetailCourseScreen> {
                   },
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
-                    const Color(0xFF126E64).withOpacity(1),
+                    const Color(0xFFD32F2F).withOpacity(1),
                     BlendMode.darken,
                   ),
                 ),
@@ -216,7 +216,7 @@ class _DetailCourseScreenState extends State<DetailCourseScreen> {
             ],
             bottom: const TabBar(
               indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: Color(0xFF126E64),
+              indicatorColor: Color(0xFFD32F2F),
               labelColor: Colors.black,
               tabs: [
                 Tab(text: 'About'),
@@ -251,13 +251,13 @@ class _DetailCourseScreenState extends State<DetailCourseScreen> {
                           horizontal: 16,
                           vertical: 8,
                         ),
-                        color: const Color(0xFFEAF6F5),
+                        color: const Color(0xFFFFEBEE),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.info_outline,
                               size: 16,
-                              color: Color(0xFF126E64),
+                              color: Color(0xFFD32F2F),
                             ),
                             const SizedBox(width: 8),
                             Expanded(
@@ -322,6 +322,7 @@ class LessonTabSection extends StatelessWidget {
   IconData _iconForType(String? type) {
     switch (type) {
       case 'slide':
+      case 'pdf':
         return Icons.slideshow_rounded;
       case 'quiz':
         return Icons.history_edu_rounded;
@@ -370,7 +371,7 @@ class LessonTabSection extends StatelessWidget {
                   ),
                   leading: Icon(
                     _iconForType(material.materialType),
-                    color: const Color(0xFF126E64),
+                    color: const Color(0xFFD32F2F),
                   ),
                   title: Text(
                     material.materialName ?? '',

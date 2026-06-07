@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+
 import { supabase } from '@/lib/supabase'
 import { Course, Section, Material, Assessment } from '@/lib/types'
 import {
@@ -27,9 +29,94 @@ const emptyQuestion = (): QuestionForm => ({
 
 const MATERIAL_TYPES = [
     { value: 'video', label: 'Video', icon: Video },
-    { value: 'slide', label: 'Slide/PDF', icon: FileText },
+    { value: 'pdf', label: 'Slide/PDF', icon: FileText },
     { value: 'quiz', label: 'Quiz', icon: HelpCircle },
 ]
+
+// ─── Question helpers ───────────────────────────────────────
+const updateQuestion = (
+    list: QuestionForm[], setList: (l: QuestionForm[]) => void,
+    idx: number, field: 'question_text', value: string
+) => {
+    const n = [...list]; n[idx] = { ...n[idx], [field]: value }; setList(n)
+}
+
+const updateOption = (
+    list: QuestionForm[], setList: (l: QuestionForm[]) => void,
+    qIdx: number, oIdx: number, value: string
+) => {
+    const n = [...list]
+    n[qIdx].options[oIdx] = { ...n[qIdx].options[oIdx], option_text: value }
+    setList(n)
+}
+
+const setCorrectOption = (
+    list: QuestionForm[], setList: (l: QuestionForm[]) => void,
+    qIdx: number, oIdx: number
+) => {
+    const n = [...list]
+    n[qIdx].options = n[qIdx].options.map((o, i) => ({ ...o, is_correct: i === oIdx }))
+    setList(n)
+}
+
+const addQuestion = (list: QuestionForm[], setList: (l: QuestionForm[]) => void) =>
+    setList([...list, emptyQuestion()])
+
+const removeQuestion = (list: QuestionForm[], setList: (l: QuestionForm[]) => void, idx: number) =>
+    setList(list.filter((_, i) => i !== idx))
+
+// ─── Question Form Component (reusable) ─────────────────────
+const QuestionListForm = ({
+    questions, setQuestions, label
+}: { questions: QuestionForm[]; setQuestions: (l: QuestionForm[]) => void; label: string }) => (
+    <div>
+        <div className="flex items-center justify-between mb-3">
+            <p className="text-sm font-semibold text-gray-700">{label}</p>
+            <button type="button" onClick={() => addQuestion(questions, setQuestions)}
+                className="text-xs flex items-center gap-1 text-teal-700 hover:underline">
+                <Plus size={12} /> Tambah Soal
+            </button>
+        </div>
+        <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
+            {questions.map((q, qi) => (
+                <div key={qi} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                    <div className="flex items-start gap-2 mb-3">
+                        <span className="text-xs text-gray-400 mt-2 shrink-0">Q{qi + 1}</span>
+                        <textarea
+                            value={q.question_text}
+                            onChange={e => updateQuestion(questions, setQuestions, qi, 'question_text', e.target.value)}
+                            rows={2}
+                            placeholder="Tulis pertanyaan..."
+                            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
+                        />
+                        {questions.length > 1 && (
+                            <button onClick={() => removeQuestion(questions, setQuestions, qi)}
+                                className="p-1 text-gray-300 hover:text-red-500 mt-1"><Trash2 size={14} /></button>
+                        )}
+                    </div>
+                    <div className="space-y-1.5">
+                        {q.options.map((opt, oi) => (
+                            <div key={oi} className="flex items-center gap-2">
+                                <button type="button" onClick={() => setCorrectOption(questions, setQuestions, qi, oi)}
+                                    className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${opt.is_correct ? 'border-teal-600 bg-teal-600' : 'border-gray-300'}`}>
+                                    {opt.is_correct && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                                </button>
+                                <input
+                                    type="text"
+                                    value={opt.option_text}
+                                    onChange={e => updateOption(questions, setQuestions, qi, oi, e.target.value)}
+                                    placeholder={`Opsi ${oi + 1}`}
+                                    className="flex-1 border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-teal-600"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+)
+
 
 // ─── Main Page ──────────────────────────────────────────────────
 export default function CourseDetailPage() {
@@ -128,7 +215,7 @@ export default function CourseDetailPage() {
         const mapped = ((s ?? []) as any[]).map((sec) => ({
             ...sec,
             materials: (sec.materials ?? []).sort((a: Material, b: Material) => a.position - b.position),
-            quiz: sec.quizzes?.[0] ?? undefined,
+            quiz: (sec.assessments ?? []).find((a: any) => a.assessment_type === 'quiz') ?? undefined,
         }))
         setSections(mapped)
         setExpandedSections(new Set(mapped.map((s: Section) => s.id)))
@@ -305,97 +392,14 @@ export default function CourseDetailPage() {
         fetchAll()
     }
 
-    // ─── Question helpers ───────────────────────────────────────
-    const updateQuestion = (
-        list: QuestionForm[], setList: (l: QuestionForm[]) => void,
-        idx: number, field: 'question_text', value: string
-    ) => {
-        const n = [...list]; n[idx] = { ...n[idx], [field]: value }; setList(n)
-    }
-
-    const updateOption = (
-        list: QuestionForm[], setList: (l: QuestionForm[]) => void,
-        qIdx: number, oIdx: number, value: string
-    ) => {
-        const n = [...list]
-        n[qIdx].options[oIdx] = { ...n[qIdx].options[oIdx], option_text: value }
-        setList(n)
-    }
-
-    const setCorrectOption = (
-        list: QuestionForm[], setList: (l: QuestionForm[]) => void,
-        qIdx: number, oIdx: number
-    ) => {
-        const n = [...list]
-        n[qIdx].options = n[qIdx].options.map((o, i) => ({ ...o, is_correct: i === oIdx }))
-        setList(n)
-    }
-
-    const addQuestion = (list: QuestionForm[], setList: (l: QuestionForm[]) => void) =>
-        setList([...list, emptyQuestion()])
-
-    const removeQuestion = (list: QuestionForm[], setList: (l: QuestionForm[]) => void, idx: number) =>
-        setList(list.filter((_, i) => i !== idx))
-
     // ─── Material type icon ─────────────────────────────────────
     const typeIcon = (type: string) => {
         if (type === 'video') return <Video size={14} className="text-blue-500" />
-        if (type === 'slide') return <FileText size={14} className="text-orange-500" />
+        if (type === 'pdf') return <FileText size={14} className="text-orange-500" />
         if (type === 'quiz') return <HelpCircle size={14} className="text-purple-500" />
         return <BookOpen size={14} className="text-gray-400" />
     }
 
-    // ─── Question Form Component (reusable) ─────────────────────
-    const QuestionListForm = ({
-        questions, setQuestions, label
-    }: { questions: QuestionForm[]; setQuestions: (l: QuestionForm[]) => void; label: string }) => (
-        <div>
-            <div className="flex items-center justify-between mb-3">
-                <p className="text-sm font-semibold text-gray-700">{label}</p>
-                <button type="button" onClick={() => addQuestion(questions, setQuestions)}
-                    className="text-xs flex items-center gap-1 text-teal-700 hover:underline">
-                    <Plus size={12} /> Tambah Soal
-                </button>
-            </div>
-            <div className="space-y-4 max-h-96 overflow-y-auto pr-1">
-                {questions.map((q, qi) => (
-                    <div key={qi} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
-                        <div className="flex items-start gap-2 mb-3">
-                            <span className="text-xs text-gray-400 mt-2 shrink-0">Q{qi + 1}</span>
-                            <textarea
-                                value={q.question_text}
-                                onChange={e => updateQuestion(questions, setQuestions, qi, 'question_text', e.target.value)}
-                                rows={2}
-                                placeholder="Tulis pertanyaan..."
-                                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600"
-                            />
-                            {questions.length > 1 && (
-                                <button onClick={() => removeQuestion(questions, setQuestions, qi)}
-                                    className="p-1 text-gray-300 hover:text-red-500 mt-1"><Trash2 size={14} /></button>
-                            )}
-                        </div>
-                        <div className="space-y-1.5">
-                            {q.options.map((opt, oi) => (
-                                <div key={oi} className="flex items-center gap-2">
-                                    <button type="button" onClick={() => setCorrectOption(questions, setQuestions, qi, oi)}
-                                        className={`w-4 h-4 rounded-full border-2 shrink-0 flex items-center justify-center ${opt.is_correct ? 'border-teal-600 bg-teal-600' : 'border-gray-300'}`}>
-                                        {opt.is_correct && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                                    </button>
-                                    <input
-                                        type="text"
-                                        value={opt.option_text}
-                                        onChange={e => updateOption(questions, setQuestions, qi, oi, e.target.value)}
-                                        placeholder={`Opsi ${oi + 1}`}
-                                        className="flex-1 border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-teal-600"
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    )
 
     // ─── Render ─────────────────────────────────────────────────
     if (loading) return <div className="text-center py-20 text-gray-400">Memuat...</div>
@@ -462,7 +466,15 @@ export default function CourseDetailPage() {
                                             <p className="text-sm text-gray-700 font-medium">{mat.material_name}</p>
                                             {mat.description && <p className="text-xs text-gray-400 truncate max-w-xs">{mat.description}</p>}
                                         </div>
-                                        <span className="text-xs text-gray-400 capitalize">{mat.material_type}</span>
+                                        {mat.material_type === 'quiz' && sec.quiz && (
+                                            <Link href={`/dashboard/questions?courseId=${course.id}&sourceType=quiz&sourceId=${sec.quiz.id}&sourceName=${encodeURIComponent(sec.quiz.assessment_name)}`}
+                                                className="text-xs text-purple-600 hover:underline">
+                                                Kelola Soal →
+                                            </Link>
+                                        )}
+                                        <span className="text-xs text-gray-400 capitalize">
+                                            {mat.material_type === 'pdf' ? 'Slide/PDF' : mat.material_type}
+                                        </span>
                                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                                             <button onClick={() => openEditMaterial(mat, sec.id)}
                                                 className="p-1 text-gray-400 hover:text-blue-600"><Pencil size={13} /></button>
@@ -500,8 +512,10 @@ export default function CourseDetailPage() {
                         <p className="text-xs text-gray-400 mt-0.5">Nilai lulus: {exam.passing_score}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <a href={`/dashboard/questions`}
-                            className="text-xs text-purple-600 hover:underline">Kelola Soal →</a>
+                        <Link href={`/dashboard/questions?courseId=${course.id}&sourceType=exam&sourceId=${exam.id}&sourceName=${encodeURIComponent(exam.assessment_name)}`}
+                            className="text-xs text-purple-600 hover:underline">
+                            Kelola Soal →
+                        </Link>
                         <button onClick={deleteExam}
                             className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"><Trash2 size={14} /></button>
                     </div>
@@ -559,57 +573,59 @@ export default function CourseDetailPage() {
                                     placeholder="contoh: Instalasi Flutter SDK"
                                     className="mt-1 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600" />
                             </div>
-                            <div>
-                                <div className="flex items-center justify-between mt-1">
-                                    <label className="text-sm font-medium text-gray-700">Deskripsi/Keterangan Materi</label>
-                                    <div className="flex border border-gray-200 rounded-lg p-0.5 bg-gray-50 text-xs">
-                                        <button type="button"
-                                            onClick={() => setDescTab('write')}
-                                            className={`px-2 py-1 rounded-md transition ${descTab === 'write' ? 'bg-white text-gray-800 font-medium shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}>
-                                            <Edit2 size={12} className="inline mr-1" /> Tulis
-                                        </button>
-                                        <button type="button"
-                                            onClick={() => setDescTab('preview')}
-                                            className={`px-2 py-1 rounded-md transition ${descTab === 'preview' ? 'bg-white text-gray-800 font-medium shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}>
-                                            <Eye size={12} className="inline mr-1" /> Pratinjau
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {descTab === 'write' ? (
-                                    <div className="mt-1 border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-teal-600 focus-within:border-transparent">
-                                        {/* Formatting Toolbar */}
-                                        <div className="flex items-center gap-1 bg-gray-50 px-2 py-1.5 border-b border-gray-200 text-gray-600">
-                                            <button type="button" onClick={() => insertMarkdown('bold')} title="Tebal (Bold)" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
-                                                <Bold size={14} />
+                            {materialForm.material_type !== 'quiz' && (
+                                <div>
+                                    <div className="flex items-center justify-between mt-1">
+                                        <label className="text-sm font-medium text-gray-700">Deskripsi/Keterangan Materi</label>
+                                        <div className="flex border border-gray-200 rounded-lg p-0.5 bg-gray-50 text-xs">
+                                            <button type="button"
+                                                onClick={() => setDescTab('write')}
+                                                className={`px-2 py-1 rounded-md transition ${descTab === 'write' ? 'bg-white text-gray-800 font-medium shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}>
+                                                <Edit2 size={12} className="inline mr-1" /> Tulis
                                             </button>
-                                            <button type="button" onClick={() => insertMarkdown('italic')} title="Miring (Italic)" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
-                                                <Italic size={14} />
+                                            <button type="button"
+                                                onClick={() => setDescTab('preview')}
+                                                className={`px-2 py-1 rounded-md transition ${descTab === 'preview' ? 'bg-white text-gray-800 font-medium shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}>
+                                                <Eye size={12} className="inline mr-1" /> Pratinjau
                                             </button>
-                                            <button type="button" onClick={() => insertMarkdown('header')} title="Header" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
-                                                <Heading3 size={14} />
-                                            </button>
-                                            <button type="button" onClick={() => insertMarkdown('list')} title="Daftar Poin" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
-                                                <List size={14} />
-                                            </button>
-                                            <span className="text-gray-300 text-xs ml-auto font-mono">Markdown</span>
                                         </div>
-                                        
-                                        <textarea 
-                                            ref={textareaRef}
-                                            value={materialForm.description}
-                                            onChange={e => setMaterialForm({ ...materialForm, description: e.target.value })}
-                                            placeholder="Tulis keterangan, rangkuman, atau info materi di sini. Gunakan tombol formatting di atas untuk mempercantik teks..."
-                                            rows={4}
-                                            className="w-full px-3 py-2 text-sm focus:outline-none resize-y border-none" 
-                                        />
                                     </div>
-                                ) : (
-                                    <div className="mt-1">
-                                        {renderMarkdownPreview(materialForm.description)}
-                                    </div>
-                                )}
-                            </div>
+
+                                    {descTab === 'write' ? (
+                                        <div className="mt-1 border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-teal-600 focus-within:border-transparent">
+                                            {/* Formatting Toolbar */}
+                                            <div className="flex items-center gap-1 bg-gray-50 px-2 py-1.5 border-b border-gray-200 text-gray-600">
+                                                <button type="button" onClick={() => insertMarkdown('bold')} title="Tebal (Bold)" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                    <Bold size={14} />
+                                                </button>
+                                                <button type="button" onClick={() => insertMarkdown('italic')} title="Miring (Italic)" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                    <Italic size={14} />
+                                                </button>
+                                                <button type="button" onClick={() => insertMarkdown('header')} title="Header" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                    <Heading3 size={14} />
+                                                </button>
+                                                <button type="button" onClick={() => insertMarkdown('list')} title="Daftar Poin" className="p-1 hover:bg-gray-200 rounded text-gray-700 transition">
+                                                    <List size={14} />
+                                                </button>
+                                                <span className="text-gray-300 text-xs ml-auto font-mono">Markdown</span>
+                                            </div>
+                                            
+                                            <textarea 
+                                                ref={textareaRef}
+                                                value={materialForm.description}
+                                                onChange={e => setMaterialForm({ ...materialForm, description: e.target.value })}
+                                                placeholder="Tulis keterangan, rangkuman, atau info materi di sini. Gunakan tombol formatting di atas untuk mempercantik teks..."
+                                                rows={4}
+                                                className="w-full px-3 py-2 text-sm focus:outline-none resize-y border-none" 
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="mt-1">
+                                            {renderMarkdownPreview(materialForm.description)}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                             {materialForm.material_type !== 'quiz' && (
                                 <div>
                                     <label className="text-sm font-medium text-gray-700">URL</label>

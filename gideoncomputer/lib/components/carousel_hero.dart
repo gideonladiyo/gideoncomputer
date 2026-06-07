@@ -19,7 +19,7 @@ class CarouselHero extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Image.asset(
-                'assets/banner/edutiv_go.png',
+                'assets/banner/banner1.jpg',
                 fit: BoxFit.fill,
               ),
             ),
@@ -32,7 +32,7 @@ class CarouselHero extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Image.asset(
-                'assets/banner/edutiv_bootcamp.png',
+                'assets/banner/banner2.jpg',
                 fit: BoxFit.fill,
               ),
             ),
@@ -45,7 +45,7 @@ class CarouselHero extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Image.asset(
-                'assets/banner/edutiv_insight.png',
+                'assets/banner/banner3.jpg',
                 fit: BoxFit.fill,
               ),
             ),
