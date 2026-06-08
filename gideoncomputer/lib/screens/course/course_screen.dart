@@ -20,8 +20,10 @@ class _CourseScreenState extends State<CourseScreen> {
     super.initState();
     final vm = Provider.of<CourseViewModel>(context, listen: false);
     _selectedCategory = vm.selectedCategory;
-    vm.getAllCourse();
-    vm.getAllCategory();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      vm.getAllCourse();
+      vm.getAllCategory();
+    });
   }
 
   @override

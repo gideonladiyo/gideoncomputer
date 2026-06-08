@@ -24,8 +24,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     final vm = Provider.of<ProfileViewModel>(context, listen: false);
-    vm.getWhoLogin();
-    vm.getEnrolledCourse();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      vm.getWhoLogin();
+      vm.getEnrolledCourse();
+    });
   }
 
   @override
