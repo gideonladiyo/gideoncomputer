@@ -75,7 +75,7 @@ class EnrollBottomBar extends StatelessWidget {
 
   // Buka WhatsApp dengan pesan otomatis
   void _contactAdmin(BuildContext context) async {
-    const adminPhone = '6281234567890'; // ← ganti dengan nomor admin
+    const adminPhone = '6282248622546'; // ← ganti dengan nomor admin
     final message = Uri.encodeComponent(
       'Halo Admin, saya ingin mendaftar course *$courseName*. Mohon informasi lebih lanjut. Terima kasih!',
     );

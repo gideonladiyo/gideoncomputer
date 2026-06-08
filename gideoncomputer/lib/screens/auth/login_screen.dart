@@ -30,6 +30,22 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _passwordVisible = false;
+
+    // Check if user is already logged in
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final session = Supabase.instance.client.auth.currentSession;
+      if (session != null) {
+        // Load the user in AuthViewModel so state is synchronized
+        Provider.of<AuthViewModel>(context, listen: false).loadUser();
+        
+        // Redirect to MainPage
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => MainPage()),
+          (route) => false,
+        );
+      }
+    });
   }
 
   void dispose() {
